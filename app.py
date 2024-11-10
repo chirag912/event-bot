@@ -86,4 +86,4 @@ if st.button("Analyze"):
         else:
             st.write("No named entities found in the review.")
     else:
-  
+        st.error("Please enter a valid review.")
