@@ -1,14 +1,22 @@
-import spacy
 import subprocess
-import openai
-import streamlit as st
+import sys
 
-# Check if 'en_core_web_sm' is installed, and if not, download it
+# Install spacy if not already installed
+try:
+    import spacy
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "spacy"])
+    import spacy
+
+# Load or download the Spacy model
 try:
     nlp = spacy.load("en_core_web_sm")
 except OSError:
-    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
+    subprocess.check_call([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
     nlp = spacy.load("en_core_web_sm")
+
+import openai
+import streamlit as st
 
 # Define the function to analyze sentiment with word-level contributions using GPT-4
 def analyze_sentiment_with_words(review, category):
