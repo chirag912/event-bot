@@ -1,19 +1,23 @@
 import subprocess
 import sys
 
-# Install spacy if not already installed
-try:
-    import spacy
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "spacy"])
-    import spacy
+# Install spacy and model if not already installed
+def install_packages():
+    try:
+        import spacy
+    except ImportError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "spacy"])
+        import spacy
 
-# Load or download the Spacy model
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    subprocess.check_call([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
-    nlp = spacy.load("en_core_web_sm")
+    # Attempt to load the Spacy model, installing it if missing
+    try:
+        nlp = spacy.load("en_core_web_sm")
+    except OSError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz"])
+        nlp = spacy.load("en_core_web_sm")
+    return nlp
+
+nlp = install_packages()
 
 import openai
 import streamlit as st
@@ -82,4 +86,4 @@ if st.button("Analyze"):
         else:
             st.write("No named entities found in the review.")
     else:
-        st.error("Please enter a valid review.")
+  
